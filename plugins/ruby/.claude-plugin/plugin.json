@@ -1,0 +1,7 @@
+{
+  "name": "ruby",
+  "version": "0.1.0",
+  "description": "Full validation suite for Ruby 3.2 projects",
+  "author": { "name": "Smithysoft" },
+  "keywords": ["ruby", "rubocop", "rspec", "bundle-audit", "validation"]
+}

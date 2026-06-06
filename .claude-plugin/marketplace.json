@@ -1,0 +1,18 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "cc-plugins",
+  "description": "Smithysoft's internal Claude Code plugin marketplace",
+  "owner": {
+    "name": "Smithysoft",
+    "email": "zhuchara+anthropic@gmail.com"
+  },
+  "plugins": [
+    {
+      "name": "ruby",
+      "source": { "source": "path", "path": "./plugins/ruby" },
+      "description": "Full validation suite for Ruby 3.2 projects: bundle audit, RuboCop, and RSpec",
+      "category": "validation",
+      "tags": ["ruby", "rubocop", "rspec", "bundle-audit"]
+    }
+  ]
+}

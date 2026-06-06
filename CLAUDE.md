@@ -1,40 +1,79 @@
 # Smithysoft CC Plugins
 
-This repository contains shared Claude Code configuration for the Smithysoft organization:
-custom slash commands, hooks, and settings that every engineer can pull in.
+Smithysoft's internal Claude Code plugin marketplace. Contains reusable slash commands,
+agents, and skills that any project can install with a single `/plugin install` command.
 
-## Structure
+## Repository Structure
 
 ```
+.claude-plugin/
+  marketplace.json          # registry of all plugins in this repo
 .claude/
-  commands/     # Custom slash commands — one .md file per command
-  settings.json # Shared permissions and hook definitions
-CLAUDE.md       # This file — Claude reads it automatically
+  commands/
+    plugin.md               # /plugin install|list|info command
+  settings.json
+plugins/
+  <plugin-name>/
+    .claude-plugin/
+      plugin.json           # required manifest
+    README.md
+    commands/<name>.md      # slash commands (/name)
+    agents/<name>.md        # sub-agents
+    skills/<name>/
+      SKILL.md              # ambient skill definition
+      references/           # supplemental docs
 ```
 
-## Using this repo
+## One-time setup
 
-### Option 1 — symlink into a project
+Register this repo as a named marketplace source so `/plugin install` can find it:
+
 ```sh
-ln -s /path/to/cc-plugins/.claude /path/to/your-project/.claude
+mkdir -p ~/.claude-plugin
+echo '{ "cc-plugins": "/path/to/cc-plugins" }' > ~/.claude-plugin/sources.json
 ```
 
-### Option 2 — copy selectively
-Copy individual files from `.claude/commands/` into your project's `.claude/commands/`.
+Replace `/path/to/cc-plugins` with the absolute path where you cloned this repo.
 
-## Adding a command
+Then copy the `/plugin` command into any project you want to use it from:
 
-1. Create `.claude/commands/<command-name>.md`
-2. Write a clear prompt describing what the command should do
-3. Open a PR — include a short description of when to use it
+```sh
+cp /path/to/cc-plugins/.claude/commands/plugin.md <your-project>/.claude/commands/plugin.md
+```
 
-## Adding a hook
+After that, inside any project you can run:
 
-Edit `.claude/settings.json` and add your hook under `"hooks"`.
-See the [Claude Code hooks docs](https://docs.anthropic.com/en/docs/claude-code/hooks) for the schema.
+```
+/plugin install ruby@cc-plugins
+/plugin list @cc-plugins
+/plugin info ruby@cc-plugins
+```
+
+## Plugin manifest (`plugin.json`)
+
+```json
+{
+  "name": "plugin-name",
+  "version": "0.1.0",
+  "description": "What the plugin does",
+  "author": { "name": "Smithysoft" },
+  "keywords": ["relevant", "tags"]
+}
+```
+
+Optional fields: `hooks`, `mcpServers`, `lspServers` — merged into the target project's
+`.claude/settings.json` on install.
+
+## Adding a plugin
+
+1. Create `plugins/<name>/` following the structure above
+2. Add a `plugin.json` manifest
+3. Add a `README.md` with usage and requirements
+4. Register it in `.claude-plugin/marketplace.json` with `name`, `source`, `description`, `category`, and `tags`
+5. Open a PR
 
 ## Conventions
 
-- Command files use kebab-case names (`pr-review.md` → `/pr-review`)
-- Keep commands focused — one job per command
+- Plugin names are lowercase kebab-case
+- One focused responsibility per plugin — broad plugins can expose multiple commands
 - No secrets, credentials, or personal config committed here

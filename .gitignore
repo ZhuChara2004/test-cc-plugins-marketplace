@@ -1,0 +1,25 @@
+# IDE
+.idea/
+.vscode/
+*.iml
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Node (for any MCP servers)
+node_modules/
+dist/
+.env
+.env.local
+
+# Python (for any MCP servers)
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# Secrets
+*.pem
+*.key
+secrets/
